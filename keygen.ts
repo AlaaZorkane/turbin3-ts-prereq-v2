@@ -1,4 +1,4 @@
-import { getAddressDecoder, getAddressFromPublicKey } from "@solana/web3.js";
+import { getAddressFromPublicKey, getBase58Decoder } from "@solana/web3.js";
 import { createLogger } from "./utils/helpers.ts";
 import { generateKeyPair, getPrivateKeyFromKeypair } from "./utils/keypair.ts";
 import * as Bun from "bun";
@@ -11,9 +11,7 @@ const kp = await generateKeyPair(true);
 const publicKey = await getAddressFromPublicKey(kp.publicKey);
 
 const rawPrivateKey = await getPrivateKeyFromKeypair(kp);
-const secretKey =
-  getAddressDecoder().decode(rawPrivateKey) +
-  getAddressDecoder().decode(rawPrivateKey, 32);
+const secretKey = getBase58Decoder().decode(rawPrivateKey);
 const secretKeyUint8 = new Uint8Array(rawPrivateKey);
 
 log.info("Public Key: %s", publicKey);

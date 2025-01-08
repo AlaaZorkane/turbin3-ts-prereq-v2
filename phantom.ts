@@ -2,6 +2,7 @@ import promptSync from "prompt-sync";
 import {
   createKeyPairSignerFromPrivateKeyBytes,
   getAddressDecoder,
+  getBase58Decoder,
   getBase58Encoder,
 } from "@solana/web3.js";
 import { createLogger } from "./utils/helpers.ts";
@@ -28,25 +29,23 @@ if (raw.startsWith("[")) {
   );
   const secretKeyRaw = await getPrivateKeyFromKeypair(keypair.keyPair);
   const privateKey = getAddressDecoder().decode(secretKeyRaw);
-  const publicKey = getAddressDecoder().decode(secretKeyRaw, 32);
-  const secretKey = privateKey + publicKey;
+  const secretKey = getBase58Decoder().decode(secretKeyRaw);
 
   log.info("Public Key (bs58): %s", keypair.address);
   log.info("Secret Key (phantom): %s", secretKey);
   log.info("Private Key (bs58): %s", privateKey);
   log.info("Secret key (uint8[]): [%s]", Array.from(uint8Array));
 } else {
-  const privateKeyBs58 = raw.slice(0, 44);
-  const publicKeyBs58 = raw.slice(44, 88);
-  const privateKeyBytes = getBase58Encoder().encode(privateKeyBs58);
-  const publicKeyBytes = getBase58Encoder().encode(publicKeyBs58);
-  const secretKeyBytes = new Uint8Array([
-    ...privateKeyBytes,
-    ...publicKeyBytes,
-  ]);
-  const secretKeyBs58 = privateKeyBs58 + publicKeyBs58;
+  const secretKeyBytes = getBase58Encoder().encode(raw);
+  const secretKeyBs58 = getBase58Decoder().decode(secretKeyBytes);
+  const privateKeyBytes = secretKeyBytes.slice(0, 32);
+  const keypair = await createKeyPairSignerFromPrivateKeyBytes(
+    privateKeyBytes,
+    true,
+  );
+  const privateKeyBs58 = getBase58Decoder().decode(privateKeyBytes);
 
-  log.info("Public Key (bs58): %s", publicKeyBs58);
+  log.info("Public Key (bs58): %s", keypair.address);
   log.info("Secret Key (phantom): %s", secretKeyBs58);
   log.info("Private Key (bs58): %s", privateKeyBs58);
   log.info("Secret Key (uint8[]): [%s]", Array.from(secretKeyBytes));
