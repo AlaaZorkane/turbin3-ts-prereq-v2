@@ -8,7 +8,7 @@ Yes you did, you can find the anchor version, as specified in the prereq documen
 But this is what you might call, a _bleeding edge version_ - it uses the new `@solana/web3.js` v2, and the new `codama` v2 generated client.
 
 ## Why?
-I finished the original prereq and I was looking for something to learn, I already built the pinocchio challenge with the new web3.js v2 but never used codama to generate the client from an IDL, so seemed like a good opportunity to learn!
+I finished the original prereq and I was looking for something to learn, I already built the [pinocchio security challenge](https://github.com/AlaaZorkane/honestjohn) with the new web3.js v2 but never used codama to generate the client from an IDL, so seemed like a good opportunity to learn!
 
 ## How is this different from the anchor version?
 Functionality-wise, it's the exact same. (except maybe using versioned transactions).
