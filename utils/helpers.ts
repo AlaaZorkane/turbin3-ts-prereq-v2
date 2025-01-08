@@ -49,3 +49,7 @@ export function createLoggerWithTimestamp(name: string) {
   ensureFatalLogger(logger);
   return logger;
 }
+
+export function explorerUrl(tx: string, cluster = "devnet") {
+  return `https://explorer.solana.com/tx/${tx}?cluster=${cluster}`;
+}

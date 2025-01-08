@@ -24,7 +24,7 @@ import {
   type TransactionMessageBytes,
   type TransactionMessageBytesBase64,
 } from "@solana/web3.js";
-import { createLogger } from "./utils/helpers.ts";
+import { createLogger, explorerUrl } from "./utils/helpers.ts";
 import { getTransferSolInstruction } from "@solana-program/system";
 
 const log = createLogger("transfer");
@@ -76,14 +76,12 @@ const transfer = async () => {
 
   const tx = getSignatureFromTransaction(signedTx);
   log.info("signature: %s", tx);
-  log.info(
-    "explorer url: https://explorer.solana.com/tx/%s?cluster=devnet",
-    tx,
-  );
 
   await sendAndConfirm(signedTx, {
     commitment: "confirmed",
   });
+
+  log.info("explorer url: %s", explorerUrl(tx));
 
   log.info("Transfer transaction completed!");
 };
@@ -154,16 +152,13 @@ const drain = async () => {
   const signedTx = await signTransactionMessageWithSigners(txMsg);
   const tx = getSignatureFromTransaction(signedTx);
   log.info("signature: %s", tx);
-  log.info(
-    "explorer url: https://explorer.solana.com/tx/%s?cluster=devnet",
-    tx,
-  );
 
   // Finally, we send and confirm the transaction
   await sendAndConfirm(signedTx, {
     commitment: "confirmed",
     skipPreflight: true,
   });
+  log.info("explorer url: %s", explorerUrl(tx));
 
   log.info("Draining transaction completed!");
 };

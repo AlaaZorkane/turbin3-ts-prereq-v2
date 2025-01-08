@@ -13,7 +13,7 @@ import {
   signTransactionMessageWithSigners,
 } from "@solana/web3.js";
 import { WALLET_FILE_NAME } from "./utils/constants.ts";
-import { createLogger } from "./utils/helpers.ts";
+import { createLogger, explorerUrl } from "./utils/helpers.ts";
 import * as Bun from "bun";
 import {
   getCompleteInstructionAsync,
@@ -47,7 +47,7 @@ const { value: latestBlockhash } = await rpc
   .send();
 
 // Using codama's generated code, we can build the instruction as follows:
-const githubUsername = "alaazorkane";
+const githubUsername = "username";
 const instruction = await getCompleteInstructionAsync({
   github: Buffer.from(githubUsername, "utf8"),
   signer: keypair,
@@ -71,7 +71,7 @@ const signedTx = await signTransactionMessageWithSigners(txMsg);
 
 const tx = getSignatureFromTransaction(signedTx);
 log.info("signature: %s", tx);
-log.info("explorer url: https://explorer.solana.com/tx/%s?cluster=devnet", tx);
 await sendAndConfirm(signedTx, {
   commitment: "confirmed",
 });
+log.info("explorer url: %s", explorerUrl(tx));
